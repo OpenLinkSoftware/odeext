@@ -1,0 +1,304 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--
+
+  $Id: index.html,v 1.13.4.6 2012/04/18 08:10:23 pvk Exp $
+
+  This file is part of the OpenLink Ajax Toolkit (OAT) project
+
+  Copyright (C) 2005-2012 OpenLink Software
+
+  This project is free software; you can redistribute it and/or modify it
+  under the terms of the GNU General Public License as published by the
+  Free Software Foundation; only version 2 of the License, dated June 1991
+
+  This project is distributed in the hope that it will be useful, but
+  WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+-->
+
+<!-- XPI version -->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<!--
+  <script type="text/javascript">
+
+var featureList = ["tab","dav","notify","tree","rdftabs","rdfstore","anchor","dimmer","ajax","dialog","grid",
+                   "graphsvg","map", "timeline","menu","dialog","xml","tagcloud","fresnel",
+                   "simplefx","combolist","json"];
+  </script>
+-->
+  <script type="text/javascript" src="index.js"></script>
+  <script type="text/javascript" src="./js/main.js"></script>
+  <script type="text/javascript" src="../oat/loader.js"></script>
+  <script type="text/javascript" src="./js/rdfbrowser2.js"></script>
+  <title>OpenLink Data Explorer</title>
+  <link rel="stylesheet" href="./styles/rdfbrowser.css" type="text/css" />
+  <link rel="stylesheet" href="../styles/winrect.css" type="text/css" />
+  <link rel="meta" title="DOAP" href="../DOAP-OAT.rdf" type="application/rdf+xml" />
+</head>
+<body>
+
+<div id="splash">
+  <div id="splash_inner">
+    <div id="splash_hd">
+      <img src="imgs/openlinklogo_wstrap_2008_no_motto.png" alt="OpenLink Software"/>
+    </div>
+    <div class="msg" id="statMsgMain">Initializing OpenLink Data Explorer</div>
+    <div class="msg" id="statMsgElem">Loading&#8230;</div>
+    <img src="../images/throbber.gif" id="splashThrobber"/>
+    <img src="../images/stop_32.png" alt="error" id="splashErrorImg" style="display: none"/>
+    <div class="error" id="statMsgErr"></div>
+    <div id="splash_ver"></div>
+    <div id="splash_copyr">Copyright &copy; 2005-2012 OpenLink Software</div>
+    <div id="splash_foot" class="opl_motto">Making Technology Work For You &trade;</div>
+  </div> <!-- #splash_inner -->
+</div> <!-- #splash -->
+
+<div id="HD" style="display:none">
+  <div id="browser_logo">
+    <img src="./imgs/openlink150.gif" alt="OpenLink Software" /><h1>Data Explorer</h1>
+  </div>
+  <div id="rdf_input"></div>
+  <a href="#" id="search_button" title="Find">Find</a>
+  <div id="rdf_tabs"></div>
+</div> 
+
+<div id="MD" style="display: none">
+  <div id="browse" style="position:relative;">
+    <div id="tabDescription"></div>
+    <div id="rdf_storage">
+      <div id="storage_stats_ctr">
+	<h2 id="title_storage">Cache</h2>
+	<img id="storage_toggle" src="./imgs/item_hide_dark.png" title="Hide storage"/>
+	<div id="storage_controls">
+	  All:&nbsp;<a href="javascript:void(0);" class="ctl_neutral" id="storage_checkall">Check</a>
+	  <a href="javascript:void(0);" class="ctl_neutral" id="storage_uncheckall">Uncheck</a>
+	  <a href="javascript:void(0);" class="ctl_neutral" id="storage_invertsel">Invert Sel</a>
+	  <a href="javascript:void(0);" class="ctl_danger"  id="storage_purge">Purge</a>
+	  <a href="javascript:void(0);" class="ctl_good"    id="storage_refreshall">Refresh</a>
+	  <a href="javascript:void(0);" class="ctl_link"    id="storage_permalink">Permalink</a>
+	</div>
+      </div>
+      <div id="storage_load_info">
+	<ul id="p_ld"></ul>
+      </div>
+    </div>
+
+    <div id="rdf_content"></div>
+    <div id="welcome"></div>
+  </div> <!-- browse -->
+
+  <div id="right_toolbar">
+    <ul>
+      <li>
+	<div class="acc_title">
+          <h4 id="category"><img src="./imgs/item_hide.png" 
+               id="toggler_category" 
+               class="item_toggler"
+               alt="show/hide"/>Categories</h4>
+        </div>
+        <ul id="category_ul">
+          <li id="rdf_category"></li>
+        </ul>
+      </li>
+      <li>
+        <div class="acc_title">
+          <h4 id="filters"><img src="./imgs/item_show.png" 
+              id="toggler_filters" 
+              class="item_toggler"
+              alt="show/hide"/>Filters</h4>
+        </div>
+        <ul id="filters_ul"></ul>
+      </li>
+      <li>
+        <div class="acc_title">
+          <h4 id="prevQueries"><img src="./imgs/item_show.png" 
+              id="toggler_prevQueries" 
+              class="item_toggler"
+              alt="show/hide"/>Previous Queries</h4>
+        </div>
+        <ul id="prevQueries_ul"></ul>
+      </li>
+      <li>
+        <div class="acc_title">
+          <h4 id="bookmark">
+            <img src="./imgs/item_show.png" 
+		 id="toggler_bookmark" 
+		 class="item_toggler"
+		 alt="show/hide"/>Bookmarks</h4>
+        </div>
+        <ul id="bookmark_ul"></ul>
+      </li>
+      <li>
+        <div class="acc_title">
+          <h4 id="dataRetrievalOpt"><img src="./imgs/item_show.png" 
+               id="toggler_dataRetrievalOpt" 
+               class="item_toggler"
+               alt="show/hide"/>Data Retrieval Options</h4>
+        </div>
+        <ul id="dataRetrievalOpt_ul">
+          <li>
+            <label class="rgroup">Caching Schemes</label><br/>
+            <input type="radio" 
+                   name="cachingSchemes" 
+                   value="get:soft" 
+                   id="spongerGetSoft" 
+                   checked="checked"/> <label class="radio" for="spongerGetSoft">Automatic</label><br/>
+            <input type="radio" 
+                   name="cachingSchemes" 
+                   value="get:replacing" 
+                   id="spongerGetReplacing"/> <label class="radio" for="spongerGetReplacing">None</label><br/>
+          </li>
+          <li>
+            <label class="rgroup">Path Traversal Schemes</label><br/>
+            <input type="radio" 
+                   name="pathTraversalSchemes" 
+                   value="grab-seealso" 
+                   id="spongerGrabSeealso"/> <label for="spongerGrabSeealso">Follow Properties</label>
+            <input type="button" 
+                   value="Edit List..." 
+                   id="predicates_select"/><br/>
+						
+            <div style="display:none;">
+              <div id="predicates_popup" class="popup">
+                <select id="spongerGrabSeealsoPredicates" multiple="multiple">
+                  <option value="foaf:knows">foaf:knows</option>
+                  <option value="sioc:links_to">sioc:links_to</option>
+                  <option value="rdfs:isDefinedBy">rdfs:isDefinedBy</option>
+                  <option value="rdfs:seeAlso">rdfs:seeAlso</option>
+                  <option value="owl:sameAs">owl:sameAs</option>
+                </select><br/>
+								
+                <input type="button" 
+                       id="spongerPredsAdd" 
+                       value="Add custom"/> 
+
+                <input type="button" 
+                       id="spongerPredsDel" 
+                       value="Remove selected"/><br/> 
+
+                <input type="button" 
+                       id="spongerPredsDefault" 
+                       value="Restore default set"/><br/><br/>
+								
+                <a href="javascript:void(0);" onclick="OAT.Anchor.close(this);">Close</a><br/><br/>
+              </div>
+            </div>
+            <input type="radio" 
+                   name="pathTraversalSchemes" 
+                   value="grab-all" 
+                   id="spongerGrabAll" 
+                   checked="checked"/> <label class="radio" for="spongerGrabAll">Follow all Properties</label><br/>
+          </li>
+          <li>
+            <label>Path Traversal Options</label><br/>
+            Retrieve Max
+	    <div id="spongerLimitNodes"></div><br/>
+            Max Crawl Depth 
+	    <div id="spongerLimitDepth"></div><br/>
+          </li>
+        </ul>
+      </li>
+<!--
+      <li>
+        <div class="acc_title">
+          <h4 id="browserOptions"><img src="./imgs/item_show.png" 
+               id="toggler_browserOptions" 
+               class="item_toggler" 
+               alt="show/hide"/>Data Explorer Options</h4>
+        </div>
+        <ul id="browserOptions_ul" style="padding-left: 50px;">
+          <li class="action" 
+              id="menu_load" 
+              style="list-style-image:url('./imgs/open_session.png');">Open Session</li>
+          <li class="action" 
+              id="menu_save" 
+              style="list-style-image:url('./imgs/save_session.png');">Save Session</li>
+          <li class="action" 
+              id="menu_rdf" 
+              style="list-style-image:url('./imgs/local_rdf_resource.png');">Local RDF Resource</li>
+          <li class="action" 
+              id="menu_options" 
+              style="list-style-image:url('./imgs/browser_settings.png');">Explorer Settings</li>
+          <li class="action" 
+              id="menu_about" 
+              style="list-style-image:url('./imgs/about_rdf_browser.png');">About Data Explorer</li>
+        </ul>
+      </li>
+-->
+    </ul>
+    <div id="toggler"></div>
+  </div> <!-- right toolbar -->
+  <div id="find_full" style="display: none">
+    <input type="text" class="find_input" id="find_txt_input"/><a href="#" id="find_help_a">What's This?</a><br/>
+    <button id="find_find_btn">Find</button>
+    <button id="find_deref_btn">Describe</button>
+    <div id="find_help" style="display:none">
+      <h2>ODE Linked Data Web Search</h2>
+      <p>Welcome to OpenLink Data Explorer's search. There are two ways to proceed from here:</p>
+      <ul>
+	<li>Searching for a text pattern in Virtuoso triple store</li> 
+	<li>Dereferencing an URI - the ODE will use the RDFizer proxy to retrieve
+          RDF data into ODE's RDF Cache and display it in the ODE Navigator</li>
+      </ul>
+      <h3>Text Patterns</h3>
+      <p>The patterns can be quoted or non-quoted strings with wildcards and connectives AND, OR, AND NOT. 
+	For example "virtuoso AND NOT violin"</p>
+      <button id="find_help_ok_b">Back to ODE main page</button>
+    </div>
+  </div>
+</div> <!-- MD -->
+
+<div id="FT" style="display:none">
+  <a href="http://virtuoso.openlinksw.com/"><img src="../images/virt_power_no_border.png" alt="Powered by OpenLink Virtuoso"/></a>
+  <a href="http://linkeddata.org"><img src="../images/LoDLogo.gif" alt="Linked Data"/></a><br/>
+  <a href="http://ode.openlinksw.com">About OpenLink Data Explorer</a><br/><br/>
+  <div id="copyright">Copyright &copy; 2005-2012 OpenLink Software</div>
+  <div id="FT_L"></div>
+  <div id="FT_R"></div>
+</div>
+
+
+<div id="options" style="display:none">
+  <div id="options_endpoint">SPARQL Endpoint: </div>
+  <hr/>
+  <label for="options_xslt">XSLT stylesheet path</label> 
+  <input type="text" name="xslt" id="options_xslt" value="" /><br/>
+  <input type="checkbox" id="options_ajax" checked="checked" /> 
+  <label for="options_ajax">Show pending AJAX calls</label><br/>
+  <input type="checkbox" id="options_http" checked="checked" />
+  <label for="options_http">Show HTTP errors</label><br/>
+  <hr/>
+  <label for="options_app">&lt;a&gt;++ behavior</label>
+  <select id="options_app">
+    <option value="hover">Activate on hover</option>
+    <option value="click" selected="selected">Activate when clicked</option>
+  </select><br/>
+<!--
+  <div id="scan_history">
+    <input type="checkbox" id="options_history" />
+    <label for="options_history">Scan Browsing history</label>
+  </div>
+-->
+</div>
+
+<div id="about_div" style="display: none"> 
+  <h1>OpenLink Data Explorer</h1>
+  <h2>Version: <span id="about_version">N/A</span></h2>
+  <h3>Built using 
+    <a target="_blank" href="http://sourceforge.net/projects/oat">OpenLink Ajax Toolkit (OAT)</a>
+  </h3>
+  <h3>OAT version: <span id="about_oat_version">N/A</span></h3>
+  <h3>OAT build: <span id="about_oat_build">N/A</span></h3>
+</div>
+
+
+</body>
+</html>

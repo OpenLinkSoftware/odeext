@@ -1,0 +1,190 @@
+/*
+ *  $Id: rdftabs.css,v 1.16.4.3 2012/01/16 19:07:16 pvk Exp $
+ *
+ *  This file is part of the OpenLink Software Ajax Toolkit (OAT) project.
+ *
+ *  Copyright (C) 2005-2012 OpenLink Software
+ *
+ *  See LICENSE file for details.
+ */
+/* browser */
+
+.rdft_browser {
+  font-size: 8pt;
+}
+
+.rdft_browser h3 {}
+.rdft_browser rdf_s {}
+.rdft_browser h3.rdf_subject {}
+.rdft_browser h3.data { display: none }
+
+
+.rdft_browser div.rdf_data {
+	width: 100%;
+	margin-top: 1em;
+	padding-bottom: 10px;
+}
+
+.rdf_sort {
+	padding-bottom: 10px;
+	background: url("../images/bottom_bkg_grad.png");
+	background-repeat: repeat-x;
+	background-position: bottom
+}
+
+.rdft_browser .rdf_item h3 {	
+  font-size: 9pt;
+  color: inherit;
+}
+
+.rdft_browser .rdf_item h3 a {
+  text-decoration: none;
+  color: #333;	     
+}
+
+.rdft_browser .rdf_item h3 a:hover {
+  text-decoration: underline;
+  color: #337;
+}
+
+.rdft_browser .rdf_item {
+/*
+	padding: 10px;
+	padding-top: 0px;
+	width: 90%;
+	clear: both;
+	border: 1px solid #888;
+	margin: 0.5em;
+	background-color: #eee;
+	overflow: hidden;
+*/
+	border-top: 1px solid #333;
+	width: 100%;
+	clear: both;
+	float: left;	
+	margin: 8px 0 0 0;
+}
+
+.rdft_browser div.rdf_preds {}
+.rdft_browser div.rdf_p { float: left; clear: left; width: 33%; font-weight: bold; overflow: hidden}
+.rdft_browser div.rdf_p a { text-decoration: none; color: #337 }
+.rdft_browser div.rdf_p a:hover { text-decoration: underline }
+
+.rdft_browser ul.rdf_o { float: left; margin-top: 0px; margin-bottom: 5px; padding: 0;width: 66%}
+.rdft_browser li.rdf_o { list-style-type: none; }
+.rdft_browser li.rdf_o a { text-decoration: none; color: #337;}
+.rdft_browser li.rdf_o a:hover { text-decoration: underline; }
+
+.rdft_browser ul.rdf_o img { max-width: 100%}
+
+.rdf_group {
+	background-color: #ddd
+}
+
+.rdf_clear {
+	clear:left
+}
+	
+/* timeline */
+.rdf_tl_port {
+	position: relative;
+	height: 100%
+}
+
+.rdf_tl_slider {
+	height: 20px;
+	margin-top: 5px;
+	position: relative
+}
+
+.timeline {
+	background-color: #fff;
+}
+
+/* images */
+
+.rdf_image {
+	border: 1px solid #aaa;
+	margin: auto;
+	padding: 0.3em;
+}
+
+.rdf_image:hover {
+	border: 1px solid #555;
+	cursor: pointer;
+}
+
+/* navigation */
+
+.rdf_nav div {
+	margin: 2px 5px;
+	float: left;
+}
+
+/* navigation - spotlight table */
+
+.rdf_nav_spotlight {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 1em 0em;
+}
+
+.rdf_nav_spotlight td {
+	padding: 2px 3px;
+}
+
+.rdf_nav_header {
+	color: #fff;
+	font-weight: bold;
+	background-color: #59e;
+	border-bottom: 1px solid #fff;
+	cursor: pointer;
+}
+
+.rdf_nav_desc {
+	font-size: 90%;
+}
+
+.rdf_nav_toggle {
+	color: #59e;
+}
+
+/* navigation - links */
+
+.rdf_link {
+	color: inherit;
+	border-bottom: 1px dotted #000;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.rdf_link:hover {
+	border-bottom: 1px solid #000;
+	color: #000;
+}
+
+.rdf_nav_spotlight a {
+	color: inherit;
+}
+
+.rdf_nav_spotlight a:hover {
+	color: #000;
+}
+
+/* tag cloud */
+
+.rdf_tagcloud {
+	width: 50%;
+	font-size: 120%;
+	text-align: justify;
+}
+
+.rdf_tagcloud a {
+	text-decoration: none;
+}
+
+/* fresnel */
+
+.fresnel_property .fresnel_container {
+	display: inline;
+}
