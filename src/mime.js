@@ -29,7 +29,7 @@ function createRedirectUrl(curUrl)
       var rp = getItem("extensions.ode.proxygenendpoint","http://linkeddata.uriburner.com/about?url=");
       var ps = getItem("extensions.ode.proxyservice","virtuoso")
 
-      return chrome.extension.getURL("chrome/content/ode/index.html?ep="+ep+
+      return Browser.api.extension.getURL("lib/ode/index.html?ep="+ep+
       		"&vt="+vt+
       		"&rp="+rp+
       		"&ps="+ps+
@@ -156,7 +156,7 @@ function finish(d) {
         var url = createRedirectUrl(d.url);
 
         if (url != null) {
-          chrome.tabs.update(d.tabId, { url: url });
+          Browser.api.tabs.update(d.tabId, { url: url });
           return { cancel: true };
         } else {
           return { cancel: false };
@@ -243,10 +243,10 @@ function onCompleted(d) {
   } catch(e) {
     console.log(e);
   }
-})(chrome.webRequest);
+})(Browser.api.webRequest);
 
 
-chrome.runtime.onMessage.addListener(
+Browser.api.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
 //    console.log(sender.tab ? "from a content script:"+sender.tab.url : "from the extension");
     if (request.ode_settings == "changed")

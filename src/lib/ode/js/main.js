@@ -76,7 +76,7 @@ var CurieCache = {
 		    q_arr.push(col);
 	    }
 	}
-	CurieCache.load (q_arr, false);
+	CurieCache.load (q_arr, true);
     },
     
     // return array with ns and elem
@@ -722,12 +722,7 @@ var IO = {
 	OAT.Preferences.xsltPath  = '../xslt/';
     } 
     /* - BEGIN CHROME EXTRA CODE - */
-    else if (OAT.Browser.isWebKit) {
-	OAT.Preferences.imagePath = '../images/';
-	OAT.Preferences.stylePath = '../styles/';
-	OAT.Preferences.xsltPath  = '../xslt/';
-    }
-    else if (OAT.Browser.isOpera || OAT.Browser.isIE) {
+    else if (OAT.Browser.isMozilla || OAT.Browser.isWebKit || OAT.Browser.isOpera || OAT.Browser.isIE) {
         OAT.Preferences.imagePath = '../images/';
 	OAT.Preferences.stylePath = '../styles/';
 	OAT.Preferences.xsltPath  = '../xslt/';

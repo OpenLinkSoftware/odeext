@@ -608,7 +608,8 @@ OAT.Dom = {
 		if (!(children instanceof Array)) { children = [children]; }
 		for (var k=0;k<children.length;k++) {
 		    var child = children[k];
-		    parent.appendChild($(child));
+		    if (child)
+		      parent.appendChild($(child));
 		}
 	    }
 	}
@@ -1213,6 +1214,7 @@ OAT.Browser = {
 
     isOpera:!!navigator.userAgent.match(/Opera/),
     isWebKit:!!navigator.userAgent.match(/AppleWebKit/),
+    isMozilla:!!navigator.userAgent.match(/Mozilla/),
 
     /* OS detection */
     isMac:!!navigator.platform.toString().match(/mac/i),

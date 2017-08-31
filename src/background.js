@@ -1,4 +1,4 @@
-chrome.browserAction.onClicked.addListener(
+Browser.api.browserAction.onClicked.addListener(
    function(tab) 
    {
 //     alert(JSON.stringify(tab));
@@ -24,7 +24,7 @@ function getItem(key, def)
 
 function LaunchEntityDescription(info, tab) {
   try {
-    if ("linkUrl" in info)
+    if (("linkUrl" in info) && info.linkUrl!==null && info.linkUrl.length > 0)
       launch_entity_describe(info.linkUrl);
     else
       launch_entity_describe(tab.url);
@@ -38,7 +38,7 @@ function LaunchEntityDescription(info, tab) {
 function LaunchPageDataSources(info, tab) 
 {
   try {
-    if ("linkUrl" in info)
+    if (("linkUrl" in info) && info.linkUrl!==null && info.linkUrl.length > 0)
       launch_ds(info.linkUrl);
     else
       launch_ds(tab.url);
@@ -49,11 +49,11 @@ function LaunchPageDataSources(info, tab)
 
 
 
-chrome.contextMenus.create(
+Browser.api.contextMenus.create(
     {"title": "View Entity Description", 
      "contexts":["all"],
      "onclick": LaunchEntityDescription});
-chrome.contextMenus.create(
+Browser.api.contextMenus.create(
     {"title": "View Data Sources", 
      "contexts":["all"],
      "onclick": LaunchPageDataSources});
@@ -110,13 +110,13 @@ function launch_ds(rawuri)
         } /// when behavior == "new", continue 
 
       } else {
-        des_win = window.open(uri);
+        des_win = Browser.backgroundOpenTab(uri);
       }
 
     } else {
       var viewer_endpoint = getItem("extensions.ode.viewerendpoint", ""); 
       rawuri = encodeURIComponent(rawuri);
-      window.open(viewer_endpoint + rawuri);
+      Browser.backgroundOpenTab(viewer_endpoint + rawuri);
     }
 }
 
@@ -174,6 +174,6 @@ function launch_entity_describe(rawuri)
 	break;
     }
 
-    window.open(url);
+    Browser.backgroundOpenTab(url);
 }
 

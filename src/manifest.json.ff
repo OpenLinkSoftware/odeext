@@ -2,6 +2,11 @@
    "name": "OpenLink Data Explorer",
    "version": "2.3.0",
    "description": "Adds Linked Data browsing functionality -- across public or private networks -- to host browser.",
+   "applications": {
+    "gecko": {
+      "id": "ode@openlinksw.com"
+     }
+    },
    "icons": {
       "16": "sw-cube-small.png",
       "32": "sw-cube-small.png",
@@ -18,13 +23,13 @@
    		   "contentSettings", "tabs",
    		   "http://*/*", "https://*/*"],
    "background": {"persistent": true, "page": "background.html"},
-   "options_page": "options.html",
+   "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+   },
 
-   "content_security_policy": 
-   "script-src https://maps.google.com https://maps.googleapis.com https://mts0.googleapis.com https://mts1.googleapis.com https://maps.gstatic.com 'self' 'unsafe-eval' chrome-extension://lib; object-src https://maps.google.com https://maps.googleapis.com https://mts0.googleapis.com https://mts1.googleapis.com https://maps.gstatic.com 'self' chrome-extension://lib; ",
-
+   "content_security_policy": "script-src 'self' https://maps.google.com https://maps.googleapis.com https://mts0.googleapis.com https://mts1.googleapis.com https://maps.gstatic.com 'unsafe-eval' moz-extension://lib;    object-src https://maps.google.com https://maps.googleapis.com https://mts0.googleapis.com https://mts1.googleapis.com https://maps.gstatic.com 'self' moz-extension://lib; ",
 
    "minimum_chrome_version": "18",
    "manifest_version": 2
 }
-

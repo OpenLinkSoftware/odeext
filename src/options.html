@@ -3,12 +3,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
     <title>OpenLink Data Explorer</title>
-    <link type="text/css" href="lib/jquery/css/smoothness/jquery-ui-1.8.6.custom.css" rel="stylesheet" />	
-    <link type="text/css" href="lib/jquery/css/footable-0.1.css" rel="stylesheet" />	
 
-    <script type="text/javascript" src="lib/jquery/jquery-1.4.2.min.js"></script>
-    <script type="text/javascript" src="lib/jquery/jquery-ui-1.8.6.custom.min.js"></script>
-    <script type="text/javascript" src="lib/jquery/footable.js"></script>
+    <link type="text/css" href="lib/jquery/css/smoothness/jquery-ui.min.css" rel="stylesheet" />
+    <link type="text/css" href="lib/jquery/css/smoothness/theme.css" rel="stylesheet" />
+    <link type="text/css" href="gridtable.css" rel="stylesheet" />	
+    <script type="text/javascript" src="lib/jquery/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript" src="lib/jquery/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="browser.js"></script>
     <script type="text/javascript" src="jsuri.js"></script>
     <script type="text/javascript" src="options.js"></script>
 
@@ -16,11 +17,6 @@
     <style type="text/css">
 	/*demo page css*/
 	body{ font: 62.5% "Trebuchet MS", sans-serif; margin: 50px;}
-	#dialog_link {padding: .4em 1em .4em 20px;text-decoration: none;position: relative;}
-	#dialog_link span.ui-icon {margin: 0 5px 0 0;position: absolute;left: .2em;top: 50%;margin-top: -8px;}
-	ul#icons {margin: 0; padding: 0;}
-	ul#icons li {margin: 2px; position: relative; padding: 4px 0; cursor: pointer; float: left;  list-style: none;}
-	ul#icons span.ui-icon {float: left; margin: 0 4px;}
     </style>	
 <!-- -->
   </head>
@@ -41,12 +37,12 @@
 
            <tr><td>
              <SELECT id="ode-prefs-viewer" style="WIDTH: 335px" >
-               <OPTION id="builtin" selected>OpenLink Data Explorer (default)</OPTION>
-               <OPTION id="zitgist">Zitgist Data Viewer</OPTION>
-               <OPTION id="marbles">Marbles</OPTION>
-               <OPTION id="disco">DISCO</OPTION>
-               <OPTION id="tabulator">Tabulator</OPTION>
-               <OPTION id="custom">Custom (URL)</OPTION>
+               <OPTION value="builtin" selected>OpenLink Data Explorer (default)</OPTION>
+               <OPTION value="zitgist">Zitgist Data Viewer</OPTION>
+               <OPTION value="marbles">Marbles</OPTION>
+               <OPTION value="disco">DISCO</OPTION>
+               <OPTION value="tabulator">Tabulator</OPTION>
+               <OPTION value="custom">Custom (URL)</OPTION>
              </SELECT>
            </td></tr>
 
@@ -94,10 +90,10 @@
                <td>Type</td>
                <td>
                  <SELECT id="ode-prefs-proxyservice" style="WIDTH: 305px" >
-                   <OPTION id="virtuoso" selected>OpenLink Virtuoso (Sponger)</OPTION>
-                   <OPTION id="virtuoso-ssl">OpenLink Virtuoso (SSL Sponger)</OPTION>
-                   <OPTION id="triplr">Triplr</OPTION>
-                   <OPTION id="custom">Custom (URL)</OPTION>
+                   <OPTION value="virtuoso" selected>OpenLink Virtuoso (Sponger)</OPTION>
+                   <OPTION value="virtuoso-ssl">OpenLink Virtuoso (SSL Sponger)</OPTION>
+                   <OPTION value="triplr">Triplr</OPTION>
+                   <OPTION value="custom">Custom (URL)</OPTION>
                  </SELECT>
                </td>
               </tr>
@@ -136,9 +132,9 @@
                <td>Type</td>
                <td>
                  <SELECT id="ode-prefs-sparql-type" style="WIDTH: 305px" >
-                   <OPTION id="virtuoso" selected>Virtuoso default</OPTION>
-                   <OPTION id="virtuoso-ssl">Virtuoso SSL</OPTION>
-                   <OPTION id="custom">Custom (URL)</OPTION>
+                   <OPTION value="virtuoso" selected>Virtuoso default</OPTION>
+                   <OPTION value="virtuoso-ssl">Virtuoso SSL</OPTION>
+                   <OPTION value="custom">Custom (URL)</OPTION>
                  </SELECT>
                </td>
               </tr>
@@ -177,12 +173,12 @@
              </table>
            </tr>
            <tr>
-             <table class="footable">
+             <table class="gridtable">
                <thead>
                  <tr>
-                   <th width="10px"></th>
-                   <th width="40%">Header</th>
-                   <th width="60%">Value</th>
+                   <th style="width:10px;"></th>
+                   <th style="width:40%">Header</th>
+                   <th style="width:60%">Value</th>
                  </tr>
                </thead>
                <tbody id="hdrs">
@@ -243,14 +239,14 @@
                <td>Viewer</td>
                <td>
                  <SELECT id="ode-prefs-handle-mode" style="WIDTH: 305px" >
-                   <OPTION id="describe" selected>Virtuoso Describe</OPTION>
-                   <OPTION id="describe-ssl" selected>Virtuoso Describe SSL</OPTION>
-                   <OPTION id="about">Virtuoso About</OPTION>
-                   <OPTION id="about-ssl">Virtuoso About SSL</OPTION>
-                   <OPTION id="ode">Virtuoso ODE</OPTION>
-                   <OPTION id="ode-ssl">Virtuoso ODE SSL</OPTION>
-                   <OPTION id="ode_local">Local ODE</OPTION>
-                   <OPTION id="none">Default</OPTION>
+                   <OPTION value="describe" selected>Virtuoso Describe</OPTION>
+                   <OPTION value="describe-ssl" selected>Virtuoso Describe SSL</OPTION>
+                   <OPTION value="about">Virtuoso About</OPTION>
+                   <OPTION value="about-ssl">Virtuoso About SSL</OPTION>
+                   <OPTION value="ode">Virtuoso ODE</OPTION>
+                   <OPTION value="ode-ssl">Virtuoso ODE SSL</OPTION>
+                   <OPTION value="ode_local">Local ODE</OPTION>
+                   <OPTION value="none">Default</OPTION>
                  </SELECT>
                </td>
               </tr>
@@ -283,8 +279,8 @@
               ODE lets you explore, find, filter and project the data in many pre-defined view types, as well as by using
               custom Fresnel views.
             </p>
-            <p> See <a id="ode-site" onclick="window.open('http://ode.openlinksw.com')" href="">ODE site</a> for more information</p>
-            <p class="copyright">Copyright 2014 OpenLink Software</p>
+            <p> See <a id="ode-site" href="">ODE site</a> for more information</p>
+            <p class="copyright">Copyright 2017 OpenLink Software</p>
         </div>
     </div>
     <input id="OK_btn" value=" OK " type="button">

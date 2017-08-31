@@ -3,8 +3,6 @@ $(function(){
 	// Tabs
 	$('#tabs').tabs();
 
-      	$("#hdrs").footable();
-
 
         loadPref();
 
@@ -28,7 +26,7 @@ $(function(){
         $('#ode-prefs-sparql-set-def').click(setSparqlDefaults);
         $('#ode-pref-handle-set-def').click(setHandleDefaults);
 
-        $('#ode-site').click(function() { window.open('http://ode.openlinksw.com');});
+        $('#ode-site').click(function() { Browser.openTab('http://ode.openlinksw.com');});
 
         $('#ode-hdr-add').click(addHdr);
         $('#ode-hdr-del').click(delHdr);
@@ -89,11 +87,11 @@ function setProxyDefaults()
 
 function setHandleDefaults() 
 {
-    $('#ode-rdf-mime').attr('checked','checked');
-    $('#ode-ttl-mime').attr('checked','checked');
-    $('#ode-n3-mime').attr('checked','checked');
+    $('#ode-rdf-mime').removeAttr('checked');
+    $('#ode-ttl-mime').removeAttr('checked');
+    $('#ode-n3-mime').removeAttr('checked');
 
-    $('#describe','#ode-prefs-handle-mode').attr('selected','selected');
+    $('#ode-prefs-handle-mode').val('describe');
     var url = new Uri($('#ode-prefs-handle-url').val().trim());
     var h_url = url.setProtocol('http').setHost('linkeddata.uriburner.com').toString(); 
     if (h_url)
@@ -108,8 +106,8 @@ function loadPref()
     var viewertype        = getItem("extensions.ode.viewertype");
     var viewerendpoint    = getItem("extensions.ode.viewerendpoint");
 
-    if (viewertype) 
-        $('#'+viewertype,'#ode-prefs-viewer').attr('selected','selected');
+    if (viewertype)
+        $('#ode-prefs-viewer').val(viewertype);
     if (viewerendpoint)
         $('#ode-prefs-viewer-custom-url').val(viewerendpoint);
 
@@ -129,7 +127,7 @@ function loadPref()
     var sparqlcustendpoint = getItem("extensions.ode.sparqlcustendpoint");
 
     if (sparqltype)
-        $('#'+sparqltype,'#ode-prefs-sparql-type').attr('selected','selected');
+        $('#ode-prefs-sparql-type').val(sparqltype);
          
     if (sparqlhost)
         $('#ode-prefs-sparql-host').val(sparqlhost);
@@ -152,7 +150,7 @@ function loadPref()
 //    				            "http://triplr.org/rdf/%s" ];
 
     if (proxyservice)
-        $('#'+proxyservice,'#ode-prefs-proxyservice').attr('selected','selected');
+        $('#ode-prefs-proxyservice').val(proxyservice);
 
     if (proxyhost)
         $('#ode-prefs-proxy-host').val(proxyhost);
@@ -165,7 +163,7 @@ function loadPref()
     var handle_mode = getItem("extensions.ode.handle.mode"); 
 
     if (handle_mode)
-        $('#'+handle_mode,'#ode-prefs-handle-mode').attr('selected','selected');
+        $('#ode-prefs-handle-mode').val(handle_mode);
 
     if (handle_url)
         $('#ode-prefs-handle-url').val(handle_url);
@@ -200,8 +198,7 @@ function savePref()
 			    'http://www4.wiwiss.fu-berlin.de/rdf_browser/?browse_uri=',
 			    'http://dig.csail.mit.edu/2005/ajar/release/tabulator/0.8/tab.html?uri='];
 
-   var _e = $('#ode-prefs-viewer option:selected').attr('id');
-
+   var _e = $('#ode-prefs-viewer option:selected').val();
    setItem("extensions.ode.viewertype", _e);
 
    if (_e != 'custom') 
@@ -213,7 +210,7 @@ function savePref()
 
    // SPARQL Endpoint
 
-   setItem("extensions.ode.sparqltype", $('#ode-prefs-sparql-type option:selected').attr('id'));
+   setItem("extensions.ode.sparqltype", $('#ode-prefs-sparql-type option:selected').val());
 
    var _s_host = $('#ode-prefs-sparql-host').val().trim();
    var _s_port = $('#ode-prefs-sparql-port').val().trim();
@@ -222,7 +219,7 @@ function savePref()
    setItem("extensions.ode.sparqlport", _s_port);
 
    var _gen_ep;
-   var _sparql_type = $('#ode-prefs-sparql-type option:selected').attr('id');
+   var _sparql_type = $('#ode-prefs-sparql-type option:selected').val();
 
    if (_sparql_type != 'custom') 
    {
@@ -244,7 +241,7 @@ function savePref()
 
    // Proxy
 
-   setItem ("extensions.ode.proxyservice", $('#ode-prefs-proxyservice option:selected').attr('id'));
+   setItem ("extensions.ode.proxyservice", $('#ode-prefs-proxyservice option:selected').val());
 
    var _p_host = $('#ode-prefs-proxy-host').val().trim();
    var _p_port = $('#ode-prefs-proxy-port').val().trim();
@@ -253,7 +250,7 @@ function savePref()
    setItem ("extensions.ode.proxyport", _p_port);
 
    var _gen_p_ep;
-   var _proxyservice = $('#ode-prefs-proxyservice option:selected').attr('id');
+   var _proxyservice = $('#ode-prefs-proxyservice option:selected').val();
 
    switch (_proxyservice) {
        case 'virt_simple':
@@ -284,13 +281,12 @@ function savePref()
    setItem ("extensions.ode.proxygenendpoint", _gen_p_ep);
    setItem ("extensions.ode.proxycustendpoint", $('#ode-prefs-proxy-custom-url').val());
 
-   var _handle_mode = $('#ode-prefs-handle-mode option:selected').attr('id');
+   var _handle_mode = $('#ode-prefs-handle-mode option:selected').val();
    setItem ("extensions.ode.handle.mode", _handle_mode);
 
 
    var url = new Uri($('#ode-prefs-handle-url').val().trim());
-   var mode = $('#ode-prefs-handle-mode option:selected').attr('id');
-   var h_url = createHandlerURL(mode, url);
+   var h_url = createHandlerURL(_handle_mode, url);
 
    setItem ("extensions.ode.handle.url", h_url);
 
@@ -313,7 +309,7 @@ function savePref()
    }
    setItem("extension.ode.headers",JSON.stringify(headers)) 
 
-   chrome.runtime.sendMessage({ode_settings: "changed"});
+   Browser.api.runtime.sendMessage({ode_settings: "changed"});
 
    close();
 }
@@ -341,7 +337,7 @@ function getItem2(key, def)
 
 function change_proxyservice()
 {
-    switch ($('#ode-prefs-proxyservice option:selected').attr('id'))
+    switch ($('#ode-prefs-proxyservice option:selected').val())
     {
       case 'virtuoso':
         $('#ode-prefs-proxy-port').val('80');
@@ -355,7 +351,7 @@ function change_proxyservice()
 
 function change_sparql_type()
 {
-    switch ($('#ode-prefs-sparql-type option:selected').attr('id'))
+    switch ($('#ode-prefs-sparql-type option:selected').val())
     {
       case 'virtuoso':
         $('#ode-prefs-sparql-port').val('80');
@@ -383,7 +379,7 @@ function enableCtrls()
     $('#ode-prefs-sparql-custom-url-bcast').hide();
     $('#ode-prefs-proxy-custom-url-bcast').hide();
 
-    switch($('#ode-prefs-viewer option:selected').attr('id'))
+    switch($('#ode-prefs-viewer option:selected').val())
     {
       case 'builtin':
         $('#ode-prefs-opening').show(); //must be enabled
@@ -395,7 +391,7 @@ function enableCtrls()
 
         var _p_port = $('#ode-prefs-sparql-port').val().trim();	
 
-        switch ($('#ode-prefs-sparql-type option:selected').attr('id'))
+        switch ($('#ode-prefs-sparql-type option:selected').val())
         {
 	  case 'virtuoso':
 	    //document.getElementById('ode-prefs-sparql-endpoint-hostport-bcast').removeAttribute('hidden');
@@ -430,7 +426,7 @@ function enableCtrls()
 
     var _p_port = $('#ode-prefs-proxy-port').val().trim();	
 
-    switch ($('#ode-prefs-proxyservice option:selected').attr('id'))
+    switch ($('#ode-prefs-proxyservice option:selected').val())
     {
       case 'virtuoso':
         $('#ode-prefs-proxy-host').removeAttr('disabled');
@@ -470,7 +466,7 @@ function enableCtrls()
     }
 
     var url = new Uri($('#ode-prefs-handle-url').val().trim());
-    var mode = $('#ode-prefs-handle-mode option:selected').attr('id');
+    var mode = $('#ode-prefs-handle-mode option:selected').val();
     var h_url = createHandlerURL(mode, url);
 
     switch (mode) {

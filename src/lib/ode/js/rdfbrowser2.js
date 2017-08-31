@@ -65,8 +65,8 @@ OAT.RDFBrowser2 = function(div,optObj) {
 
 	for (var p in optObj) { this.options[p] = optObj[p]; }
 
-	/* - BEGIN XPI EXTRA CODE - */
-	
+/****	
+	/// -- BEGIN XPI EXTRA CODE - 
 	if (OAT.Browser.isChrome()) {
 	    var prefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
 
@@ -91,8 +91,10 @@ OAT.RDFBrowser2 = function(div,optObj) {
 	    }
 	    self.is_xpi = true;
 	} 
-	/* - BEGIN CHROME EXTRA CODE - */
-	else if (OAT.Browser.isWebKit || OAT.Browser.isOpera) { //&& navigator.userAgent.match(/Chrome/)){
+	/// - BEGIN CHROME EXTRA CODE -
+	else 
+****/
+	if (OAT.Browser.isMozilla || OAT.Browser.isWebKit || OAT.Browser.isOpera) { //&& navigator.userAgent.match(/Chrome/)){
 	    var obj = OAT.Dom.uriParams();
 	    var proxyservice = null;
 
