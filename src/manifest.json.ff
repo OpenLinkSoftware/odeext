@@ -1,6 +1,6 @@
 {
    "name": "OpenLink Data Explorer",
-   "version": "2.3.0",
+   "version": "2.4.0",
    "description": "Adds Linked Data browsing functionality -- across public or private networks -- to host browser.",
    "applications": {
     "gecko": {
