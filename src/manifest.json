@@ -1,6 +1,6 @@
 {
    "name": "OpenLink Data Explorer",
-   "version": "2.4.1",
+   "version": "2.4.2",
    "description": "Adds Linked Data browsing functionality -- across public or private networks -- to host browser.",
    "icons": {
       "16": "sw-cube-small.png",
