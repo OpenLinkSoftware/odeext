@@ -3,7 +3,7 @@
 #
 #  This file is part of the OpenLink Structured Data Sniffer
 #
-#  Copyright (C) 2015-2017 OpenLink Software
+#  Copyright (C) 2015-2019 OpenLink Software
 #
 #  This project is free software; you can redistribute it and/or modify it
 #  under the terms of the GNU General Public License as published by the
@@ -29,12 +29,6 @@ following projects:
     Description	: jQuery is a fast, small, and feature-rich JavaScript library.  It makes things
 		  like HTML document traversal and manipulation, event handling, animation, and Ajax
 		  much simpler with an easy-to-use API that works across a multitude of browsers.
-
-* jQuery migrate
-    Project	: https://github.com/jquery/jquery-migrate
-    License	: https://github.com/jquery/jquery-migrate/blob/master/LICENSE.txt, looks like MIT license
-    Description	: Migrate older jQuery code to jQuery 1.9+
-
 
 * jsuri.js
     Project	: https://github.com/derek-watson/jsUri
