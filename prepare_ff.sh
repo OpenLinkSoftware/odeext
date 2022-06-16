@@ -38,3 +38,5 @@ for I_DIR in lib; do
   tar --exclude 'orig' -cf - -C $SRC_DIR/$I_DIR .|tar -xf - -C $DST_DIR/$I_DIR
 done
 
+rm $DST_DIR/lib/oat/map.js
+rm $DST_DIR/lib/ode/js/rdfbrowser2.js.orig
