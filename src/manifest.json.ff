@@ -1,35 +1,48 @@
 {
-   "name": "OpenLink Data Explorer",
-   "version": "2.4.2",
-   "description": "Adds Linked Data browsing functionality -- across public or private networks -- to host browser.",
-   "applications": {
+  "name": "OpenLink Data Explorer",
+  "short_name": "ode",
+  "author":"OpenLink Software",
+  "homepage_url": "http://ode.openlinksw.com/",
+  "version": "2.5.1",
+  "manifest_version": 2,
+  "minimum_chrome_version": "18",
+  "description": "Adds Linked Data browsing functionality -- across public or private networks -- to host browser.",
+  "applications": {
     "gecko": {
       "id": "ode@openlinksw.com"
-     }
-    },
-   "icons": {
+    }
+  },
+  "icons": {
       "16": "sw-cube-small.png",
       "32": "sw-cube-small.png",
       "48": "sw-cube.png",
       "128": "sw-cube.png"
-   },
+  },
 
-   "browser_action": {
+  "browser_action": {
       "default_icon": "sw-cube-small.png",
       "default_title": "OpenLink Data Explorer"
-   },
-   "permissions": ["contextMenus", "storage",
-   		   "webRequest", "webRequestBlocking",
-   		   "contentSettings", "tabs",
-   		   "http://*/*", "https://*/*"],
-   "background": {"persistent": true, "page": "background.html"},
-   "options_ui": {
-    "page": "options.html",
-    "open_in_tab": true
-   },
+  },
+  "permissions": [
+     "contextMenus", 
+     "storage",
+     "webRequest", 
+     "webRequestBlocking",
+     "*://*/*", 
+     "file:///*/*"
+  ],
 
-   "content_security_policy": "script-src 'self' https://maps.google.com https://maps.googleapis.com https://mts0.googleapis.com https://mts1.googleapis.com https://maps.gstatic.com 'unsafe-eval' moz-extension://lib;    object-src https://maps.google.com https://maps.googleapis.com https://mts0.googleapis.com https://mts1.googleapis.com https://maps.gstatic.com 'self' moz-extension://lib; ",
+  "background": {
+     "persistent": true, 
+     "page": "background.html"
+  },
+  "options_ui": {
+     "page": "options.html",
+     "open_in_tab": true
+  },
 
-   "minimum_chrome_version": "18",
-   "manifest_version": 2
+   "content_security_policy": 
+    "script-src 'self' 'unsafe-eval' moz-extension://lib;    object-src  'self' moz-extension://lib; "
+
 }
+
