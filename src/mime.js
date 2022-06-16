@@ -18,56 +18,65 @@
  *
  */
 
-function createRedirectUrl(curUrl) 
-{
-  var handle_url = getItem('extensions.ode.handle.url','http://linkeddata.uriburner.com/describe?url=');
-  var mode = getItem('extensions.ode.handle.mode','describe');
+(function () {
 
-  switch(mode) {
-    case 'describe':
-    case 'describe-ssl':
-      return handle_url + encodeURIComponent(curUrl);
+ var pref = new Settings();
 
-    case 'about':
-    case 'about-ssl':
-      var result = curUrl.match(/^((\w+):\/)?\/?(.*)$/);
-      if (!result) {
-        throw 'Invalid url:\n' + curUrl;
-        return null;
-      }
+  async function createRedirectUrl(curUrl) 
+  {
+    var handle_url = await pref.getValue('extensions.ode.handle.url');
+    var mode = await pref.getValue('extensions.ode.handle.mode');
+
+    switch(mode) {
+      case 'describe':
+      case 'describe-ssl':
+        return handle_url + encodeURIComponent(curUrl);
+
+      case 'about':
+      case 'about-ssl':
+        var result = curUrl.match(/^((\w+):\/)?\/?(.*)$/);
+        if (!result) {
+          throw 'Invalid url:\n' + curUrl;
+          return null;
+        }
 //      var protocol = result[2]=="https"?"http":result[2];
-      var protocol = result[2];
-      return handle_url + protocol + '/' + result[3];
+        var protocol = result[2];
+        return handle_url + protocol + '/' + result[3];
 
-    case 'ode':
-    case 'ode-ssl':
-      return handle_url + encodeURIComponent(curUrl);
+      case 'ode':
+      case 'ode-ssl':
+        return handle_url + encodeURIComponent(curUrl);
 
-    case 'ode_local':
-      var ep = getItem("extensions.ode.sparqlgenendpoint", "http://linkeddata.uriburner.com/sparql");
-      var vt = getItem("extensions.ode.viewertype","builtin");
-      var rp = getItem("extensions.ode.proxygenendpoint","http://linkeddata.uriburner.com/about?url=");
-      var ps = getItem("extensions.ode.proxyservice","virtuoso")
+      case 'ode_local':
+        var ep = await pref.getValue("extensions.ode.sparqlgenendpoint");
+        var vt = await pref.getValue("extensions.ode.viewertype");
+        var rp = await pref.getValue("extensions.ode.proxygenendpoint");
+        var ps = await pref.getValue("extensions.ode.proxyservice");
 
-      return Browser.api.extension.getURL("lib/ode/index.html?ep="+ep+
+        return Browser.api.extension.getURL("lib/ode/index.html?ep="+ep+
       		"&vt="+vt+
       		"&rp="+rp+
       		"&ps="+ps+
       		"&view="+encodeURIComponent(curUrl));
 
-    default:
-      //url = 'view-source:'+d.url;
-      return null;
+      default:
+        //url = 'view-source:'+d.url;
+        return null;
+    }
+    return null;
   }
-  return null;
-}
 
 
 //////////////// MIME HANDLER //////////
 /* requests */
 
-function onBeforeRequestLocal(d) 
-{
+  Browser.api.webRequest.onBeforeRequest.addListener(
+       onBeforeRequestLocal, 
+       {types: ["main_frame"], urls: ["file:///*"]}, 
+       ["blocking"]);
+
+  async function onBeforeRequestLocal(d) 
+  {
     var handle = false;
 
 /**
@@ -88,71 +97,30 @@ function onBeforeRequestLocal(d)
 //    console.log(d);
 //    if (d.url.match(/(.n3|.rdf|.ttl)$/i)) {
     if (handle) {
-        var mode = getItem('extensions.ode.handle.mode','describe');
-        if (mode === 'ode_local') {
+      var mode = await pref.getValue('extensions.ode.handle.mode');
+      if (mode === 'ode_local') {
 
-          var rc = null;
-          try {
-            rc = _rb[d.requestId];
-          }catch(e) {}
-
-          if (rc != null)
-            return;
-
-          var url = createRedirectUrl(d.url);
-          if (url!=null) {
-            _rb[d.requestId] = true;
-            return {redirectUrl: url};
-          } else {
-            return { cancel: false };
+        var _url = await createRedirectUrl(d.url);
+        if (_url != null) {
+          if (Browser.is_ff) {
+            Browser.api.tabs.update(d.tabId, { url: _url });
+//don't show save dialog      
+            return { cancel: true };
+          }
+          else {
+            Browser.api.tabs.update(d.tabId, { url: _url });
+            return { cancel: true };
           }
         }
-    }
-}
-
-
-/****
-function onBeforeRequestHttp(d) 
-{
-    var handle = false;
-
-    if ((file_types & FILE_RDF)!=0 && d.url.match(/(.rdf)$/i))
-      handle = true;
-    else if ((file_types & FILE_TTL)!=0 && d.url.match(/(.ttl)$/i))
-      handle = true;
-    else if ((file_types & FILE_N3)!=0 && d.url.match(/(.n3)$/i))
-      handle = true;
-
-//    console.log(d);
-//    if (d.url.match(/(.n3|.rdf|.ttl)$/i)) 
-    if (handle) {
-    {
-      var rc = null;
-      try {
-        rc = _rb[d.requestId];
-      }catch(e) {}
-
-      if (rc != null)
-        return
-
-      var url = createRedirectUrl(d.url);
-      if (url!=null) 
-      {
-        _rb[d.requestId] = true;
-        return {redirectUrl: url};
-      } else {
-        return { cancel: false };
       }
     }
-}
-****/
+  }
+
+
 
 
 
 /* responses */
-
-var _r = {};
-var _rb = {};
 
 var mime_types = 0;
 var file_types = 0;
@@ -166,80 +134,103 @@ const FILE_TTL = 2;
 const FILE_N3  = 4;
 
 
-function finish(d) {
-    if (_r[d.requestId] == true) {
+  Browser.api.webRequest.onHeadersReceived.addListener(
+  	onHeadersReceived, 
+  	  {types: ["main_frame"], urls: ["<all_urls>"]}, 
+  	  ["responseHeaders", "blocking"]);
 
-        var url;
-
-        delete _r[d.requestId];
-
-        var url = createRedirectUrl(d.url);
-
-        if (url != null) {
-          Browser.api.tabs.update(d.tabId, { url: url });
-          return { cancel: true };
-        } else {
-          return { cancel: false };
-        }
-    }
-}
-
-
-function onHeadersReceived(d) {
-//console.log(d);
-    var rc = null;
-    try {
-      rc = _rb[d.requestId];
-    }catch(e) {}
-
-    if (rc != null)
+  async function onHeadersReceived(d) 
+  {
+  //console.log(d);
+    if (d.method && d.method!=='GET')
       return;
 
-    var found = false;
-    for (var i in d.responseHeaders) {
-        var header = d.responseHeaders[i];
-        var handle = false;
-
-        if (header.name && header.name.match(/content-type/i)) {
-          if ((mime_types & MIME_RDF)!=0 && header.value.match(/\/(rdf)/))
-            handle = true;
-          else if ((mime_types & MIME_TTL)!=0 && header.value.match(/\/(turtle)/))
-            handle = true;
-          else if ((mime_types & MIME_N3)!=0 && header.value.match(/\/(n3)/))
-            handle = true;
-        }
-
-//        if (header.name && header.name.match(/content-type/i)
-//                        && header.value.match(/\/(n3|rdf|turtle)/))
-        if (handle)
-          {
-            _r[d.requestId] = true;
-            found = true;
-          }
+    var headerContent = null;
+    for (var header of d.responseHeaders) {
+      if (header.name && header.name.match(/^content-type/i)) {
+        headerContent = header;
+        contentType = header.value;
+        break;
+      }
     }
-    if (found)
-      return finish(d);
-}
+    
+    var handle = false;
+    var type = null;
 
-function onErrorOccurred(d) { 
-    delete _rb[d.requestId];
-    return finish(d); 
-}
+    if (headerContent) {
+      if ((mime_types & MIME_RDF)!=0 && headerContent.value.match(/\/(rdf)/)) {
+        handle = true;
+        type = 'rdf';
+      }
+      else if ((mime_types & MIME_TTL)!=0 && headerContent.value.match(/\/(turtle)/)) {
+        handle = true;
+        type = 'turtle';
+      }
+      else if ((mime_types & MIME_N3)!=0 && headerContent.value.match(/\/(n3)/)) {
+        handle = true;
+        type = 'n3';
+      }
+    }
 
-function onCompleted(d) { 
-    delete _rb[d.requestId];
-}
+    if (handle)  {
+      var _url = await createRedirectUrl(d.url);
+
+      if (_url != null) {
+        if (Browser.is_ff) {
+          Browser.api.tabs.update(d.tabId, { url: _url });
+//don't show save dialog      
+          return { cancel: true };
+        }
+        else {
+          Browser.api.tabs.update(d.tabId, { url: _url });
+          return { cancel: true };
+        }
+      }
+    }
+  }
 
 
-(function setup(api) {
-  try {
 
-   if (getItem ("extension.ode.handle.rdf.mime")=="1")
-     mime_types |= MIME_RDF;
-   if (getItem ("extension.ode.handle.ttl.mime")=="1")
-     mime_types |= MIME_TTL;
-   if (getItem ("extension.ode.handle.n3.mime")=="1")
-     mime_types |= MIME_N3;
+
+  Browser.api.runtime.onMessage.addListener(
+    async function(request, sender, sendResponse) {
+      if (request.ode_settings == "changed")
+      {
+        var pref = new Settings();
+        mime_type = 0;
+
+        var v = await pref.getValue ("extension.ode.handle.rdf.mime");
+        if (v==="1")
+          mime_types |= MIME_RDF;
+
+        v = await pref.getValue ("extension.ode.handle.ttl.mime");
+        if (v==="1")
+          mime_types |= MIME_TTL;
+
+        v = await pref.getValue ("extension.ode.handle.n3.mime");
+        if (v==="1")
+          mime_types |= MIME_N3;
+      }
+    });
+
+
+  async function init() 
+  {
+
+    try {
+      mime_type = 0;
+
+      var v = await pref.getValue ("extension.ode.handle.rdf.mime");
+      if (v==="1")
+        mime_types |= MIME_RDF;
+
+      v = await pref.getValue ("extension.ode.handle.ttl.mime");
+      if (v==="1")
+        mime_types |= MIME_TTL;
+
+      v = await pref.getValue ("extension.ode.handle.n3.mime");
+      if (v==="1")
+        mime_types |= MIME_N3;
 
 /***
    if (getItem ("extension.ode.handle.rdf.file")=="1")
@@ -249,33 +240,12 @@ function onCompleted(d) {
    if (getItem ("extension.ode.handle.n3.file")=="1")
      file_types |= FILE_N3;
 ***/    
-    var reqFile = ["file:///*"];
-    var reqUrls = ["http://*/*", "https://*/*"];
-
-    api.onCompleted.addListener (onCompleted, {types: ['main_frame'], urls: ["<all_urls>"]});
-    api.onErrorOccurred.addListener(onErrorOccurred, {types: ['main_frame'], urls: ["<all_urls>"]});
-
-    api.onBeforeRequest.addListener(onBeforeRequestLocal, {types: ["main_frame"], urls: reqFile}, ["blocking"]);
-//    api.onBeforeRequest.addListener(onBeforeRequestHttp, {types: ["main_frame"], urls: reqUrls}, ["blocking"]);
-
-    api.onHeadersReceived.addListener(  onHeadersReceived,   {types: ["main_frame"], urls: reqUrls}, ["responseHeaders", "blocking"]);
-
-  } catch(e) {
-    console.log(e);
-  }
-})(Browser.api.webRequest);
-
-
-Browser.api.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
-//    console.log(sender.tab ? "from a content script:"+sender.tab.url : "from the extension");
-    if (request.ode_settings == "changed")
-    {
-      if (getItem ("extension.ode.handle.rdf.mime")=="1")
-        mime_types |= MIME_RDF;
-      if (getItem ("extension.ode.handle.ttl.mime")=="1")
-        mime_types |= MIME_TTL;
-      if (getItem ("extension.ode.handle.n3.mime")=="1")
-        mime_types |= MIME_N3;
+    } catch(e) {
+      console.log(e);
     }
-  });
+
+  }
+
+  init();
+
+})();

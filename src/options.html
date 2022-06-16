@@ -28,13 +28,16 @@
     <script type="text/javascript" src="lib/jquery/jquery-3.1.0.min.js"></script>
     <script type="text/javascript" src="lib/jquery/jquery-ui.min.js"></script>
     <script type="text/javascript" src="browser.js"></script>
-    <script type="text/javascript" src="jsuri.js"></script>
+    <script type="text/javascript" src="utils.js"></script>
+    <script type="text/javascript" src="settings.js"></script>
     <script type="text/javascript" src="options.js"></script>
 
 <!-- -->
     <style type="text/css">
-	/*demo page css*/
-	body{ font: 62.5% "Trebuchet MS", sans-serif; margin: 50px;}
+	body{ 
+	  margin: 50px;
+	  font-size: 13px;
+	}
     </style>	
 <!-- -->
   </head>
@@ -42,7 +45,7 @@
   <body>
 
     <!-- Tabs -->
-    <div id="tabs" style="WIDTH: 400px">
+    <div id="tabs" style="WIDTH: 600px">
       <ul>
 	<li><a href="#tabs-1">Viewers</a></li>
 	<li><a href="#tabs-2">Linked Data Access</a></li>
@@ -51,7 +54,7 @@
       </ul>
 	<div id="tabs-1">
           <table>
-           <tr>Viewer</tr>
+           <tr>Viewer <p/></tr>
 
            <tr><td>
              <SELECT id="ode-prefs-viewer" style="WIDTH: 335px" >
@@ -65,7 +68,7 @@
            </td></tr>
 
            <tr><td id="ode-prefs-opening-label">
-             When invoked on page:
+             <p/>When invoked on page:
            </td></tr>
 
            <tr><td>
@@ -100,7 +103,7 @@
         <div id="tabs-2">
 
           <table>
-           <tr>RDFizer Service</tr>
+           <tr>RDFizer Service <p/></tr>
 
            <tr>
              <table>
@@ -137,12 +140,13 @@
            </tr>
 
            <tr>
+             <p/>
              <input id="ode-pref-proxy-set-def" value="Set Default" type="button">
            </tr>
 
-           <tr> <hr> </tr>
+           <tr> <hr><p/> </tr>
 
-           <tr>SPARQL Endpoint</tr>
+           <tr>SPARQL Endpoint <p/></tr>
 
            <tr><td>
              <table>
@@ -177,21 +181,16 @@
            </tr>
 
            <tr>
+             <p/>
              <input id="ode-prefs-sparql-set-def" value="Set Default" type="button">
            </tr>
 
-           <tr> <hr> </tr>
+           <tr> <hr> <p/> </tr>
            <tr>
-             <table>
-               <tr>
-                <td width="80%">Additional HTTP Headers</td>
-                <td width="10%"> <input id="ode-hdr-add" value="+Add" type="button"> </td>
-                <td width="10%"> <input id="ode-hdr-del" value="-Remove" type="button"> </td>
-               </tr>
-             </table>
+              <td width="80%">Additional HTTP Headers <p/></td>
            </tr>
            <tr>
-             <table class="gridtable">
+             <table id="hdr_tbl" class="gridtable">
                <thead>
                  <tr>
                    <th style="width:10px;"></th>
@@ -199,16 +198,17 @@
                    <th style="width:60%">Value</th>
                  </tr>
                </thead>
-               <tbody id="hdrs">
-<!--
-                 <tr>
-                   <td><input id="chk" type="checkbox"/></td>
-                   <td><input id="h" value=""></td>
-                   <td><input id="v" value=""></td>
-                 </tr>
--->
+               <tbody id="hdr_data">
                </tbody>
              </table>
+             <table>
+               <tr >
+                 <button style="margin:6px; margin-top:2px;" id="hdr_add" class="hdr_add"> 
+                   <input type="image" src="lib/css/img/plus.png" width="12" height="12">
+                 </button>
+               </tr>
+             </table>
+
            </tr>
           </table>
 
@@ -218,7 +218,7 @@
         <div id="tabs-3">
           <table>
 <!--           <tr>Handle RDF,N3,TTL data via:</tr> -->
-           <tr>Handle:</tr>
+           <tr>Handle:<p/></tr>
 
            <tr>
             <table>
@@ -281,6 +281,7 @@
            </tr>
 
            <tr>
+             <p/>
              <input id="ode-pref-handle-set-def" value="Set Default" type="button">
            </tr>
           </table>
@@ -291,16 +292,18 @@
 	<div id="tabs-4">
             <IMG alt="" src="sw-cube.png">
             <h3>Semantic Web OpenLink Data Explorer</h3>
-            <p>Version 2.4.2</p>
+            <p id="ext_ver">Version 0.0.0</p>
             <p>  
               OpenLink Data Explorer extension reveals the linked data behind the page you are viewing.
               ODE lets you explore, find, filter and project the data in many pre-defined view types, as well as by using
               custom Fresnel views.
             </p>
             <p> See <a id="ode-site" href="">ODE site</a> for more information</p>
-            <p class="copyright">Copyright 2019 OpenLink Software</p>
+            <p class="copyright">Copyright 2015-<span id="c_year">2021</span>  <a href="http://www.openlinksw.com" target="_blank">OpenLink Software</a></p>
         </div>
     </div>
+    <p/>
+
     <input id="OK_btn" value=" OK " type="button">
     <input id="Cancel_btn" value=" Cancel " type="button">
 			

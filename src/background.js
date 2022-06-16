@@ -24,20 +24,6 @@ Browser.api.browserAction.onClicked.addListener(
      launch_entity_describe(tab.url);
    }); 
 
-function setItem(key, value) 
-{
-    localStorage.removeItem(key);
-    localStorage.setItem(key, value);
-}
-
-
-function getItem(key, def) 
-{
-    var val = localStorage.getItem(key);
-    return (val != null)?val: def;
-}
-
-
 
 
 
@@ -80,9 +66,10 @@ Browser.api.contextMenus.create(
 
 var des_win = null;
 
-function launch_ds(rawuri) 
+async function launch_ds(rawuri) 
 {
-    var viewertype = getItem("extensions.ode.viewertype","builtin");
+    var pref = new Settings();
+    var viewertype = await pref.getValue("extensions.ode.viewertype");
 
     /// if incompatible protocol, do not launch anything
     if (rawuri.indexOf("chrome://ode/")==0 
@@ -103,11 +90,11 @@ function launch_ds(rawuri)
       if (/https?:\/\/(www.)?twitter.com/.test(rawuri)) 
         rawuri=rawuri.replace('#!/','');
 
-      var ep = getItem("extensions.ode.sparqlgenendpoint", "http://linkeddata.uriburner.com/sparql");
-      var vt = getItem("extensions.ode.viewertype","builtin");
-      var rp = getItem("extensions.ode.proxygenendpoint","http://linkeddata.uriburner.com/about?url=");
-      var ps = getItem("extensions.ode.proxyservice","virtuoso");
-      var headers = getItem("extension.ode.headers","[]");
+      var ep = await pref.getValue("extensions.ode.sparqlgenendpoint");
+      var vt = await pref.getValue("extensions.ode.viewertype");
+      var rp = await pref.getValue("extensions.ode.proxygenendpoint");
+      var ps = await pref.getValue("extensions.ode.proxyservice");
+      var headers = await pref.getValue("extension.ode.headers","[]");
 
       var uri = "lib/ode/index.html?ep="+ep+
                   "&vt="+vt+"&rp="+rp+"&ps="+ps+"&headers="+headers+
@@ -117,7 +104,7 @@ function launch_ds(rawuri)
 
       /// check if ode is already opened
       if (des_win && !des_win.closed) {
-        var behavior = getItem("extensions.ode.openingbehavior","add");
+        var behavior = await pref.getValue("extensions.ode.openingbehavior","add");
         if (behavior == "add") { /// add to opened ode 
            des_win.location.href += '&uri[]=' + rawuri;
            found = true;
@@ -133,7 +120,7 @@ function launch_ds(rawuri)
       }
 
     } else {
-      var viewer_endpoint = getItem("extensions.ode.viewerendpoint", ""); 
+      var viewer_endpoint = await pref.getValue("extensions.ode.viewerendpoint", ""); 
       rawuri = encodeURIComponent(rawuri);
       Browser.backgroundOpenTab(viewer_endpoint + rawuri);
     }
@@ -141,8 +128,10 @@ function launch_ds(rawuri)
 
 
 
-function launch_entity_describe(rawuri) 
+async function launch_entity_describe(rawuri) 
 {
+    var pref = new Settings();
+
     if (rawuri.length == 0) {
       return;
     }
@@ -159,9 +148,9 @@ function launch_entity_describe(rawuri)
     if (/https?:\/\/(www.)?twitter.com/.test(rawuri)) 
         rawuri=rawuri.replace('#!/','');
 
-    var proxy_host = getItem("extensions.ode.proxyhost","linkeddata.uriburner.com");
-    var proxy_port = getItem("extensions.ode.proxyport","");
-    var proxy_srv =  getItem("extensions.ode.proxyservice", "virtuoso");
+    var proxy_host = await pref.getValue("extensions.ode.proxyhost");
+    var proxy_port = await pref.getValue("extensions.ode.proxyport");
+    var proxy_srv =  await pref.getValue("extensions.ode.proxyservice");
     var url;
 
     var result = rawuri.match(/^((\w+):\/)?\/?(.*)$/);
@@ -188,7 +177,7 @@ function launch_entity_describe(rawuri)
 	url= "http://triplr.org/rdf/"+result[3];
 	break;
       default:
-	url = getItem("extensions.ode.proxycustendpoint","http://linkeddata.uriburner.com/about?uri=");
+	url = await pref.getValue("extensions.ode.proxycustendpoint");
 	url += rawuri;
 	break;
     }
