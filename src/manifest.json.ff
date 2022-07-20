@@ -3,7 +3,7 @@
   "short_name": "ode",
   "author":"OpenLink Software",
   "homepage_url": "http://ode.openlinksw.com/",
-  "version": "2.5.2",
+  "version": "2.5.3",
   "manifest_version": 2,
   "minimum_chrome_version": "18",
   "description": "Adds Linked Data browsing functionality -- across public or private networks -- to host browser.",
@@ -42,7 +42,7 @@
   },
 
    "content_security_policy": 
-    "script-src 'self' 'unsafe-eval' moz-extension://lib;    object-src  'self' moz-extension://lib; "
+    "script-src 'self' moz-extension://lib;    object-src  'self' moz-extension://lib; "
 
 }
 
