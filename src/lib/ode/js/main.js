@@ -799,7 +799,7 @@ var IO = {
     var br_tab = rdfb.addTab("browser",  "What", {});
     OAT.MSG.attach ("*", "CONTENT_RESIZE", br_tab.resize)
     
-    rdfb.addTab("map",      "Where",{provider:OAT.Map.TYPE_G3}); // Google Map
+//    rdfb.addTab("map",      "Where",{provider:OAT.Map.TYPE_G3}); // Google Map
     rdfb.addTab("timeline", "When", {}); // Timeline
     rdfb.addTab("fresnel",  "Who",
 		{	
